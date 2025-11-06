@@ -1,0 +1,7 @@
+input
+{
+	FPVector2 Direction;
+	button Jump;
+    FPVector3 CameraForward;
+    FPVector3 CameraRight;
+}
