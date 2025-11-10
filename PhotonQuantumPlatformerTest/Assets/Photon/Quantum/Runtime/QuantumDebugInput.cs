@@ -24,7 +24,7 @@ namespace Quantum {
 
       i.Direction = new FPVector2(x.ToFP(), y.ToFP());
       i.Jump = UnityEngine.Input.GetButton("Jump");
-
+      i.Push = UnityEngine.Input.GetButton("Push");
       var cam = Camera.main.transform;
 
       Vector3 forward = cam.forward;

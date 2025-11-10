@@ -14,13 +14,7 @@ public class AnimationView : QuantumEntityViewComponent<BaseCharacterViewContext
 	{
 		var kcc = PredictedFrame.Get<CharacterController3D>(EntityRef);
 
-		if(kcc.Jumped == true)
-		{
-			Debug.Log("Yess");
-		}
-
 		_animator.SetFloat("Speed", kcc.Velocity.XOZ.Magnitude.AsFloat);
-		_animator.SetBool("Jump", kcc.Jumped);
 		_animator.SetBool("IsGround", kcc.Grounded);
 	}
 }

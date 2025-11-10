@@ -49,6 +49,62 @@ namespace Quantum.Prototypes.Unity {
   using RuntimeInitializeOnLoadMethodAttribute = UnityEngine.RuntimeInitializeOnLoadMethodAttribute;
   #endif //;
   
+  [System.SerializableAttribute()]
+  public unsafe partial class DeadZoneLinkPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.DeadZoneLinkPrototype> {
+    public Quantum.QuantumEntityPrototype DeadZone;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.DeadZoneLinkPrototype prototype);
+    public override Quantum.Prototypes.DeadZoneLinkPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.DeadZoneLinkPrototype();
+      converter.Convert(this.DeadZone, out result.DeadZone);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe partial class PlatformLinkPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.PlatformLinkPrototype> {
+    public Quantum.QuantumEntityPrototype Platform;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.PlatformLinkPrototype prototype);
+    public override Quantum.Prototypes.PlatformLinkPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.PlatformLinkPrototype();
+      converter.Convert(this.Platform, out result.Platform);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe partial class PlatformMovingPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.PlatformMovingPrototype> {
+    public FP Speed;
+    public Int32 CurrentIndex;
+    public QBoolean revers;
+    [DynamicCollectionAttribute()]
+    public FPVector3[] Position = {};
+    [DynamicCollectionAttribute()]
+    public Quantum.QuantumEntityPrototype[] Triggers = {};
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.PlatformMovingPrototype prototype);
+    public override Quantum.Prototypes.PlatformMovingPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.PlatformMovingPrototype();
+      converter.Convert(this.Speed, out result.Speed);
+      converter.Convert(this.CurrentIndex, out result.CurrentIndex);
+      converter.Convert(this.revers, out result.revers);
+      converter.Convert(this.Position, out result.Position);
+      converter.Convert(this.Triggers, out result.Triggers);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe partial class PlatformRiderPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.PlatformRiderPrototype> {
+    public Quantum.QuantumEntityPrototype PlatformEntity;
+    public FPVector3 LastPlatformPos;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.PlatformRiderPrototype prototype);
+    public override Quantum.Prototypes.PlatformRiderPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.PlatformRiderPrototype();
+      converter.Convert(this.PlatformEntity, out result.PlatformEntity);
+      converter.Convert(this.LastPlatformPos, out result.LastPlatformPos);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
 }
 #pragma warning restore 0109
 #pragma warning restore 1591

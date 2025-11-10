@@ -1,0 +1,4 @@
+component PlatformRider {
+    EntityRef PlatformEntity;
+    FPVector3 LastPlatformPos;
+}

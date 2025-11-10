@@ -2,6 +2,7 @@ input
 {
 	FPVector2 Direction;
 	button Jump;
+	button Push;
     FPVector3 CameraForward;
     FPVector3 CameraRight;
 }

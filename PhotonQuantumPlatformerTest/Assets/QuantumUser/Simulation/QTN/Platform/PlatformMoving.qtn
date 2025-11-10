@@ -1,0 +1,8 @@
+component PlatformMoving
+{
+	FP Speed;
+	int CurrentIndex;
+	bool revers;
+	list<FPVector3> Position;
+	list<EntityRef> Triggers;
+}

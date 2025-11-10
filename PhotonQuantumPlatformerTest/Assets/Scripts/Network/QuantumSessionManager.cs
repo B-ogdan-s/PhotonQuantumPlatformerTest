@@ -3,19 +3,14 @@ using System;
 using Zenject;
 using Photon.Realtime;
 using UnityEngine;
-using Photon.Deterministic;
+using System.Threading.Tasks;
 
 public class QuantumSessionManager
 {
     private readonly QuantumLobbyManager _lobbyManager = new();
-	private readonly QuantumSceneLoader _sceneLoader = new();
 
-	private MenuConnectArgs _connectArgs;
-	private RuntimePlayer _player;
-
-	private RealtimeClient _client;
-	private QuantumRunner _runner;
-	private QuantumClientUpdater _updater;
+	private QuantumGameHandler _gameHandler;
+	private PlayerGameData _gameData;
 
 	public Action OnStartSession;
 	public Action OnFailedSession;
@@ -26,54 +21,46 @@ public class QuantumSessionManager
 	public Action<int, int> OnChangePlayerCount;
 
 	[Inject]
-	public QuantumSessionManager(MenuConnectArgs connectArgs, RuntimePlayer player)
+	public QuantumSessionManager(QuantumGameHandler gameHandler, PlayerGameData gameData)
 	{
-		_connectArgs = connectArgs;
-		_player = player;
+		_gameHandler = gameHandler;
 		_lobbyManager.OnChangePlayerCount += ChangePlayerCount;
+		_gameData = gameData;
 	}
-
 	public async void StartSessionAsync()
 	{
-		var args = new MatchmakingArguments
-		{
-			PhotonSettings = PhotonServerSettings.Global.AppSettings,
-			RoomName = null,
-			CanOnlyJoin = false,
-			MaxPlayers = _connectArgs.MaxPLayers,
-			PluginName = "QuantumPlugin",
-			UserId = Guid.NewGuid().ToString(),
-		};
-		_client = new RealtimeClient();
-		_client.AddCallbackTarget(_lobbyManager);
-		CreateUpdater();
+		RealtimeClient  client = new RealtimeClient();
+		client.AddCallbackTarget(_lobbyManager);
+		_gameHandler.CreateUpdater(client);
 
-		_client = await MatchmakingExtensions.ConnectToRoomAsync(_client, args);
+		client = await _gameHandler.CreateClient(client);
 
-		if (_client == null || !_client.InRoom)
+		if (client == null || !client.InRoom)
 		{
-			DestroyUpdater();
+			_gameHandler.DestroyUpdater();
 			OnFailedSession?.Invoke();
 			return;
 		}
-
-		_client.AddCallbackTarget(_lobbyManager);
 
 		OnStartSession?.Invoke();
 	}
 
 	public async void LeaveSessionAsync()
 	{
-		DestroyUpdater();
-		_client?.RemoveCallbackTarget(_lobbyManager);
-		await _client?.DisconnectAsync();
+		RealtimeClient client = _gameHandler.Client;
+
+		_gameHandler.DestroyUpdater();
+		client?.RemoveCallbackTarget(_lobbyManager);
+		await client?.DisconnectAsync();
 		OnLeaveSession?.Invoke();
 	}
 
 	private void ChangePlayerCount()
 	{
-		int currentCount = _client.CurrentRoom.PlayerCount;
-		int maxCount = _client.CurrentRoom.MaxPlayers;
+		Room room = _gameHandler.Client.CurrentRoom;
+
+		int currentCount = room.PlayerCount;
+		int maxCount = room.MaxPlayers;
 
 		OnChangePlayerCount?.Invoke(currentCount, maxCount);
 
@@ -84,41 +71,10 @@ public class QuantumSessionManager
 		}
 	}
 
-	private async void CreateGame()
+	private async Task CreateGame()
 	{
-		DestroyUpdater();
-
-		await _sceneLoader.LoadScene(_connectArgs.Config, _client);
-
-		SessionRunner.Arguments arg = new()
-		{
-			RunnerFactory = QuantumRunnerUnityFactory.DefaultFactory,
-			GameParameters = QuantumRunnerUnityFactory.CreateGameParameters,
-			ClientId = _client.UserId,
-			RuntimeConfig = _connectArgs.Config,
-			SessionConfig = QuantumDeterministicSessionConfigAsset.DefaultConfig,
-			GameMode = DeterministicGameMode.Multiplayer,
-			PlayerCount = _connectArgs.MaxPLayers,
-			StartGameTimeoutInSeconds = 10,
-			Communicator = new QuantumNetworkCommunicator(_client),
-		};
-
-		_runner = await QuantumRunner.StartGameAsync(arg);
-
-		_runner.Game.AddPlayer(_player);
-
-		_sceneLoader.UnloadOldScene();
-	}
-
-	private void CreateUpdater()
-	{
-		var go = new GameObject("QuantumClientUpdater");
-		_updater = go.AddComponent<QuantumClientUpdater>();
-		_updater.Client = _client;
-	}
-	private void DestroyUpdater()
-	{
-		GameObject.Destroy(_updater.gameObject);
-		_updater = null;
+		_gameData.MapId = 0;
+		_gameHandler.DestroyUpdater();
+		await _gameHandler.CreateGame();
 	}
 }

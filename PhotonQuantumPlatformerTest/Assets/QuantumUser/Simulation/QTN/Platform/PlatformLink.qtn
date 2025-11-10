@@ -1,0 +1,4 @@
+component PlatformLink
+{
+	EntityRef Platform;
+}

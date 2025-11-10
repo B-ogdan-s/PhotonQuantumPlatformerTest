@@ -22,6 +22,7 @@ public class MainMenuStateInstaller : MonoInstaller
 		{
 			{typeof(MainMenuState_Main), new MainMenuState_Main(data) },
 			{typeof(MainMenuState_Lobby), new MainMenuState_Lobby(data) },
+			{typeof(MainMenuState_CharacterSelector),  new MainMenuState_CharacterSelector(data) }
 		};
 
 		return states;

@@ -1,4 +1,5 @@
 component PlayerMoving
 {
+	FPVector3 Position;
 	FP Speed;
 }
