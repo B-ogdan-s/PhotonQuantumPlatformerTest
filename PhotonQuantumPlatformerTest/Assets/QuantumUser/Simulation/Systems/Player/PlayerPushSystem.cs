@@ -5,18 +5,17 @@ namespace Quantum.Player
 
     public unsafe class PlayerPushSystem : SystemMainThreadFilter<PlayerPushSystem.Filter>
     {
-        public override void Update(Frame f, ref Filter filter)
-        {
+		public override void Update(Frame f, ref Filter filter)
+		{
 			var input = f.GetPlayerInput(filter.PlayerLink->Player);
 
-			if(input->Push.IsDown && !filter.Push->IsPush)
+			if (input->Push.WasPressed && !filter.Push->IsPush)
 			{
 				UnityEngine.Debug.Log("0002");
 				filter.Push->IsPush = true;
 				TryPush(f, ref filter);
 			}
-
-			if(!input->Push.IsDown && filter.Push->IsPush)
+			else
 			{
 				filter.Push->IsPush = false;
 			}
