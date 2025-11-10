@@ -5,8 +5,6 @@ public class AnimationView : QuantumEntityViewComponent<BaseCharacterViewContext
 {
 	private Animator _animator;
 
-	private bool _pushValue = false;
-
 	public override void OnInitialize()
 	{
 		_animator = GetComponentInChildren<Animator>();
@@ -21,9 +19,7 @@ public class AnimationView : QuantumEntityViewComponent<BaseCharacterViewContext
 		_animator.SetBool("IsGround", kcc.Grounded);
 
 
-		if (push.IsPush && _pushValue != push.IsPush)
+		if (push.IsPush)
 			_animator.SetTrigger("IsPush");
-
-		_pushValue = push.IsPush;
 	}
 }
