@@ -9,8 +9,9 @@ namespace Quantum.Player
 		{
 			var input = f.GetPlayerInput(filter.PlayerLink->Player);
 
-			if (input->Push.IsDown)
+			if (input->Push.WasPressed && !filter.Push->IsPush)
 			{
+				UnityEngine.Debug.LogWarning("000000");
 				filter.Push->IsPush = true;
 				TryPush(f, ref filter);
 			}

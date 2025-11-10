@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba87300c32756124eb84b77ace336287, type: 3}
   m_Name: BaseMode
   m_EditorClassIdentifier: Assembly-CSharp::GameModeData
-  _maxPlayers: 2
+  _maxPlayers: 1
   _maps:
-  - {fileID: 11400000, guid: 676f26ef9e81ba34791a0f4739c1c260, type: 2}
   - {fileID: 11400000, guid: c220a2c2743982f4299c3b36e915d212, type: 2}
+  - {fileID: 11400000, guid: 676f26ef9e81ba34791a0f4739c1c260, type: 2}
